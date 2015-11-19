@@ -62,6 +62,7 @@ Ou Docker Toolbox: https://www.docker.com/docker-toolbox
 
 - Um simples contador de visitas em NodeJS + Express
 - Persistência em Redis
+- https://github.com/labianchin/docker-nodejs-demo
 
 .smaller[
 ```javascript
