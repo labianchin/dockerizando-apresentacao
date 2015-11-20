@@ -18,12 +18,6 @@ TODO: foto?
 
 ---
 
-Use aciinema rec
-
-[![asciicast](https://asciinema.org/a/1ktdq2d1rt9mmy7akisaeswsu.png)](https://asciinema.org/a/1ktdq2d1rt9mmy7akisaeswsu)
-
----
-
 ## Agenda
 
 - O que é, por que e como instalar Docker?
@@ -36,10 +30,11 @@ Use aciinema rec
 
 ## O que é por que Docker?
 
-- Isolamento: cgroups e namespaces
-- Empacotamento de dependências: imagens imutáveis
-- Deploys atômicos
-- Um app por container, vários containers no mesmo Docker host compartilhando um kernel
+- Isolamento: cgroup e namespaces
+- Dependências dentro de um pacote (imagem)
+- Densidade: um app por container, vários containars no mesmo servidor (Docker Host)
+- Imagem como artefato de deployment
+- Facilita escalar horizontalmente
 
 ---
 
@@ -133,7 +128,6 @@ docker build -t my-app .
 ]
 ]
 
-
 ---
 
 ## Run
@@ -149,9 +143,46 @@ docker run -it -p 3000:3000 --link my-redis:redis_1 my-app
 ![](imgs/run.png)
 ]
 
+
 ---
 
-## Com cache
+## docker-compose
+
+Cansado de vários `docker run`?
+
+```docker-compose.yml
+web:
+  build: .
+  ports:
+    - "3000:3000"
+  links:
+   - redis
+redis:
+  image: redis:latest
+```
+
+```sh
+$ docker-compose up
+```
+
+---
+
+## Fontes e Referências
+
+- http://mherman.org/blog/2015/03/06/node-with-docker-continuous-integration-and-delivery/
+- https://www.airpair.com/node.js/posts/getting-started-with-docker-for-the-nodejs-dev
+- http://anandmanisankar.com/posts/docker-container-nginx-node-redis-example/
+- http://www.slideshare.net/labianchin/verdades-do-docker
+
+---
+
+class: center, middle, inverse
+
+## Perguntas?
+
+---
+
+## Dockerfile com cache
 
 
 ```Dockerfile
@@ -172,9 +203,19 @@ CMD npm start
 
 ---
 
-## docker-compose
+## Build automatizado no Docker hub
 
-Cansado de vários `docker run`?
+https://hub.docker.com/r/labianchin/docker-nodejs-demo/builds/
+
+---
+
+## Volumes
+
+```sh
+$ docker volume create --name=myvolume
+$ docker run -v myvolume:/data busybox sh -c "echo hello > /data/file.txt"
+$ docker run -v myvolume:/data busybox sh -c "cat /data/file.txt"
+```
 
 ```docker-compose.yml
 web:
@@ -185,35 +226,32 @@ web:
    - redis
 redis:
   image: redis:latest
+  volumes_from: myvolume
 ```
 
-```
-docker-compose up
-```
 
 ---
 
-## Criando um build automatizado no Docker hub
+## Docker Machine
 
-TODO: ...
-
----
-
-## Volumes
-
-```
-$ docker volume create --name=myvolume
-$ docker run -v myvolume:/data busybox sh -c "echo hello > /data/file.txt"
-$ docker run -v myvolume:/data busybox sh -c "cat /data/file.txt"
+```sh
+$ docker-machine create \
+    --driver digitalocean \
+    --digitalocean-access-token 0ab77166d407f479c6701652cee3a46830fef88b8199722b87821621736ab2d4 \
+    staging
+Creating SSH key...
+Creating Digital Ocean droplet...
+To see how to connect Docker to this machine, run: docker-machine env staging
 ```
 
 ---
 
 ## Boas práticas para imagens
 
-- Agrupar vários comandos no mesmo RUN
 - Um processo por container
-- ...
+- Minimize o número de layers: agrupar vários comandos no mesmo RUN
+- Aproveite o build cache
+- Prefira COPY ao invés de ADD
 
 ---
 
@@ -222,20 +260,10 @@ $ docker run -v myvolume:/data busybox sh -c "cat /data/file.txt"
 - CI: build, test and package
 - Em produção: entenda sobre mesos e/ou kubernetes
 - Entenda shell scripting
-- Cuidado com yak shaving
-
----
-
-## Algumas fontes e links
-
-- http://mherman.org/blog/2015/03/06/node-with-docker-continuous-integration-and-delivery/
-- https://www.airpair.com/node.js/posts/getting-started-with-docker-for-the-nodejs-dev
-- http://anandmanisankar.com/posts/docker-container-nginx-node-redis-example/
-- http://www.slideshare.net/labianchin/verdades-do-docker
+- Cuidado com "yak shaving"
 
 ---
 
 class: center, middle, inverse
 
-## Perguntas?
-
+## Fim
