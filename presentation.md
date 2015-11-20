@@ -116,18 +116,23 @@ https://github.com/nodejs/docker-node/blob/2445743c1453941f787b0aa22cca51c62a1a3
 
 ---
 
+class: split-50
+
 ## Build
 
 ```sh
 docker build -t my-app .
 ```
 
-.fixsize[
+.fixsize2[
+.column[
 ![](imgs/build1.png)
+]
+.column[
 ![](imgs/build2.png)
 ]
+]
 
-TODO: side by side... and rec-build.json
 
 ---
 
@@ -194,10 +199,30 @@ TODO: ...
 
 ---
 
+## Volumes
+
+```
+$ docker volume create --name=myvolume
+$ docker run -v myvolume:/data busybox sh -c "echo hello > /data/file.txt"
+$ docker run -v myvolume:/data busybox sh -c "cat /data/file.txt"
+```
+
+---
+
+## Boas práticas para imagens
+
+- Agrupar vários comandos no mesmo RUN
+- Um processo por container
+- ...
+
+---
+
 ## Outros detalhes
 
 - CI: build, test and package
 - Em produção: entenda sobre mesos e/ou kubernetes
+- Entenda shell scripting
+- Cuidado com yak shaving
 
 ---
 
@@ -206,6 +231,7 @@ TODO: ...
 - http://mherman.org/blog/2015/03/06/node-with-docker-continuous-integration-and-delivery/
 - https://www.airpair.com/node.js/posts/getting-started-with-docker-for-the-nodejs-dev
 - http://anandmanisankar.com/posts/docker-container-nginx-node-redis-example/
+- http://www.slideshare.net/labianchin/verdades-do-docker
 
 ---
 
