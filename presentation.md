@@ -3,18 +3,14 @@ class: center, middle, inverse
 
 # Dockerizando uma aplicação NodeJS
 
-### Nice subtitle
+### Luís Bianchin
 
 ---
 
 ## Sobre mim
 
-TODO: coloca foto!
-
 - Consultor desenvolvedor na ThoughtWoks
-- Conhece Docker a 2 anos
-
-TODO: foto?
+- Contato com Docker a 2 anos
 
 ---
 
@@ -28,7 +24,7 @@ TODO: foto?
 
 ---
 
-## O que é por que Docker?
+## O que é e por que Docker?
 
 - Isolamento: cgroup e namespaces
 - Dependências dentro de um pacote (imagem)
