@@ -12,6 +12,11 @@ class: center, middle, inverse
 - Consultor desenvolvedor na ThoughtWoks
 - Contato com Docker a 2 anos
 
+.fixsize.right[
+![](https://avatars0.githubusercontent.com/u/239562?v=3&s=240)
+]
+
+
 ---
 
 ## Agenda
@@ -31,6 +36,10 @@ class: center, middle, inverse
 - Densidade: um app por container, vários containars no mesmo servidor (Docker Host)
 - Imagem como artefato de deployment
 - Facilita escalar horizontalmente
+
+.fixsize.center[
+![](imgs/docker.png)
+]
 
 ---
 
@@ -83,6 +92,8 @@ http.createServer(app).listen(process.env.PORT || 3000, function() {
 ---
 
 ## Criando um Dockerfile
+
+`vim Dockerfile`
 
 ```Dockerfile
 FROM node:5.0.0
@@ -199,6 +210,32 @@ CMD npm start
 
 ---
 
+### Dockerfile onbuild
+
+App Dockerfile:
+
+```Dockerfile
+FROM node:5.0.0-onbuild
+EXPOSE 3000
+```
+
+Dockerfile `node:5.0.0-onbuild`:
+
+```Dockerfile
+FROM node:5.1.0
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+ONBUILD COPY package.json /usr/src/app/
+ONBUILD RUN npm install
+ONBUILD COPY . /usr/src/app
+
+CMD [ "npm", "start" ]
+```
+
+---
+
 ## Build automatizado no Docker hub
 
 https://hub.docker.com/r/labianchin/docker-nodejs-demo/builds/
@@ -207,11 +244,15 @@ https://hub.docker.com/r/labianchin/docker-nodejs-demo/builds/
 
 ## Volumes
 
+Criando volume:
+
 ```sh
 $ docker volume create --name=myvolume
 $ docker run -v myvolume:/data busybox sh -c "echo hello > /data/file.txt"
 $ docker run -v myvolume:/data busybox sh -c "cat /data/file.txt"
 ```
+
+Usando `volumes_from` no `docker-compose`:
 
 ```docker-compose.yml
 web:
@@ -223,6 +264,12 @@ web:
 redis:
   image: redis:latest
   volumes_from: myvolume
+```
+
+Fazendo backups:
+
+```sh
+$ docker cp myvolume:/data/ ./local_path
 ```
 
 
@@ -239,6 +286,10 @@ Creating SSH key...
 Creating Digital Ocean droplet...
 To see how to connect Docker to this machine, run: docker-machine env staging
 ```
+
+- Aqui usando Digital Ocean como driver
+- Também há VirtualBox (antigo boot2docker)
+- Prefira um Docker Host em US: `docker pull` mais rápido
 
 ---
 
